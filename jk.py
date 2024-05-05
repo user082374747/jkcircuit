@@ -206,8 +206,8 @@ class Switch(UnaryGate):
 
     def __init__(self, n):
         UnaryGate.__init__(self, n)
-        self.visited = False
         self.output = None
+        self.visited = False
         # inheriting from the parent due to similar logic
     
     def performGateLogic(self):
@@ -215,12 +215,10 @@ class Switch(UnaryGate):
             self.visited = True
             if self.getPin():
                 self.output = 1
-                return 1
             else:
                 self.output = 0
-                return 0
-        else:
-            return self.output
+        return self.output
+
     # returns whatever the input is
 
 class Connector:
@@ -245,6 +243,7 @@ class JKFlipFlop(BinaryGate):
     def __init__(self, n):
         BinaryGate.__init__(self, n)
         self.q = 0
+        self.qn = 0
         self.visited = False
         # takes two inputs, so initialises with the binary gate first
 
@@ -263,6 +262,7 @@ class JKFlipFlop(BinaryGate):
     # and changed the text from A and B to J and K so it makes more sense
  
     def performGateLogic(self):
+        print(f'the current q value is {self.q}')
         if self.visited == False:
             self.visited = True
             print('false')
@@ -270,14 +270,14 @@ class JKFlipFlop(BinaryGate):
             k = self.getPinB()
             if self.q == 0:
                 if j == 0:
-                    self.q = 0
+                    self.qn = 0
                 elif j == 1:
-                    self.q = 1
+                    self.qn = 1
             elif self.q == 1:
                 if k == 0:
-                    self.q = 1
+                    self.qn = 1
                 elif k == 1:
-                    self.q = 0
+                    self.qn = 0
             return self.q
         else:
             print('true')
@@ -285,8 +285,9 @@ class JKFlipFlop(BinaryGate):
     # the outputs according to the excitement table
     
 def main():
-    switch = Switch('s')
+    jk1 = JKFlipFlop('jk1')
     power = Power('p')
+    switch = Switch('s')
     agate1 = AndGate('a1')
     agate2 = AndGate('a2')
     ngate1 = NotGate('n1')
@@ -306,7 +307,15 @@ def main():
     c10 = Connector(power, jk2)
     c11 = Connector(ngate2, agate3)
     c12 = Connector(jk2, agate3)
-    print(agate3.getOutput())
+
+    while True:
+
+        print(agate3.getOutput())
+        jk1.q = jk1.qn
+        jk2.q = jk2.qn
+        jk1.visited = False
+        jk2.visited = False
+        switch.visited = False
 
 main()
 
