@@ -52,7 +52,6 @@ class BinaryGate(LogicGate):
     # you can get input into a gate from two places: externally, as before, 
     # and from the output of a gate that is connected to that input line
 
-
 class AndGate(BinaryGate):
 
     def __init__(self,n):
@@ -238,7 +237,6 @@ class Connector:
     # putting the setNextPin into action using the inputs of the from and the to
 
 class JKFlipFlop(BinaryGate):
-# the jk flipflop without the clock, 
 
     def __init__(self, n):
         BinaryGate.__init__(self, n)
@@ -246,6 +244,7 @@ class JKFlipFlop(BinaryGate):
         self.qn = 0
         self.visited = False
         # takes two inputs, so initialises with the binary gate first
+        # the two q variables, and the visited boolean that solves the recursion errors
 
     def getPinA(self):
         if self.pinA == None:
@@ -265,6 +264,8 @@ class JKFlipFlop(BinaryGate):
         print(f'the current q value is {self.q}')
         if self.visited == False:
             self.visited = True
+            # does this so once the qn value has been calculated, it doesnt do it again (goes to line 283)
+
             print('false')
             j = self.getPinA()
             k = self.getPinB()
@@ -282,7 +283,8 @@ class JKFlipFlop(BinaryGate):
         else:
             print('true')
             return self.q
-    # the outputs according to the excitement table
+    # qn is set according to the excitation table
+    # q is returned (so it works like a proper jkflipflop)
     
 def main():
     jk1 = JKFlipFlop('jk1')
@@ -307,15 +309,18 @@ def main():
     c10 = Connector(power, jk2)
     c11 = Connector(ngate2, agate3)
     c12 = Connector(jk2, agate3)
+    # constructing the circuit
 
     while True:
-
         print(agate3.getOutput())
         jk1.q = jk1.qn
         jk2.q = jk2.qn
+        # updates the q values of jk1 and 2 appropriately
+
         jk1.visited = False
         jk2.visited = False
         switch.visited = False
+    # loop to simulate clock thing, resetting the visited for everything so they can be calculated again
 
 main()
 
